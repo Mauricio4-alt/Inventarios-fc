@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         unique:true,
         trim:true  // eliminar los espacios en balanco
 },
-email:{
+email:{ // email debeia ser único y obligatorio
     type:String,
     required:true,
     unique:true,
