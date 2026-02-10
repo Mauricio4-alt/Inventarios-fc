@@ -1,11 +1,11 @@
 {
-  "name": "inventarios",
+  "name": "ecommerse-backend",
   "version": "1.0.0",
-  "description": "Proyecto de inventarios para la formación de SENA",
+  "description": "Backend para el proyecto de e-commerce con Node.js, Express y MongoDB",
   "license": "ISC",
   "author": "mauricio urdaneta",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
