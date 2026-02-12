@@ -65,8 +65,20 @@ const productSchema = new mongoose.Schema({
         required:[true,'La subCategoria es requerida']
     },
     
+    // quien creo el producto
+    //  Referencia de User no requerido
+    createdBy:{
+        type:mongoose.Schema.types.ObjectId,
+        ref:'User' //  pude ser pobldo para mostrar los usuarios
+    },
 
-    // active desactiva la subcategoria pero no la elimina 
+    // Array de urls de imagenes de productos
+    images:[{
+        type:String, // url de la imagen
+
+    }],
+
+    // active desactiva el producto pero no lo elimina 
     active:{
         type:Boolean,
         default:true,
@@ -92,21 +104,19 @@ const productSchema = new mongoose.Schema({
 * ignora errores si el indice no existe 
 * continua con el guardado normal
 */
-subCategorySchema.post('save', function (error,doc,next){
+productSchema.post('save', function (error,doc,next){
 //     verificar si es error de mongoDB por violacionde indice único
-        if(error==='MongoServeError'&& error.code===1000)
-            {
-                next(new Error('Ya existe una subcategoria con ese nombre'))
-            }
-       else{
+        if(error==='MongoServeError'&& error.code===11000)
+        {
+            return next(new Error('Ya existe un producto con ese nombre'))
+        }
         //  pasar el erorr como es 
-        next()
+        next(error)
 
-        } 
+        } )
     
     
 
-})
 
 /*
 * crear indice unico
@@ -118,4 +128,4 @@ subCategorySchema.post('save', function (error,doc,next){
 
 
 // exportar el modelo
-module.exports = mongoose.model('subCategory',subCategorySchema)
+module.exports = mongoose.model('product',productSchema)
