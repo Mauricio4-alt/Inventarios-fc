@@ -7,9 +7,9 @@
 
 const Subcategory = require("./Subcategory")
 
-const User = requiere('./User')
-const Product = requiere('./Produc')
-const Category = requiere('/Category')
+const User = require('./user')
+const Product = require('./Produc')
+const Category = require('/Category')
 
 //  Exportar todos los modlos
 
