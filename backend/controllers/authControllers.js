@@ -124,7 +124,7 @@ exports.signin = async (req,res) => {
                 message:'Contraseña incorrecta'
             })
         }
-    // geenrar jwt 24 horas
+    // generar jwt 24 horas
     const token =jwtExpiration.sign(
         {
             id:user._id,
