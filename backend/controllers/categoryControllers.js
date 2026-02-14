@@ -272,9 +272,11 @@ exports.deleteCategory = async (req,res) =>{
                 success:true,
                 message:'Categoria eliminada permanentemente y sus subcategorias y productos relacionados',
                 data:{
-                    category:category
+                    category:category,
+                    subcategoriesDeactivated:subcategories.modifiedCount,
+                    productsDeactivated:producs.modifiedCount
                 }
-            })
+            });
         }else{
             // soft delete solo marcar como inactivo con cascada 
             category.active = false;
@@ -285,6 +287,13 @@ exports.deleteCategory = async (req,res) =>{
                 {active:false}
             );
         }
-    }catch(err){}
+    }catch(err){
+        console.error('Error en deleteCategory',err);
+        res.status(500).json({
+            succes:false,
+            message:'Error al eliminar la categoria',
+            error:err.message
+        })
+    }
 
 }
