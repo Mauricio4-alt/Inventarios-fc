@@ -234,7 +234,7 @@ exports.deleteCategory = async (req,res) =>{
  
             
             //  paso 2 eliminar la categoria misma 
-            await Category.findByIdAndDelete({category:req.params.id});
+            await subCategory.findByIdAndDelete({category:req.params.id});
 
             return res.status(200).json({
                 success:true,
