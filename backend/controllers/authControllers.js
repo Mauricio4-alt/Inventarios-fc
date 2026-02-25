@@ -1,7 +1,4 @@
-/**
- * Controlador de autenticacion
- * maneja el registro login y generacion de tokens jwt
-*/
+
 const User= require('../models/user') 
 
 const bcrypt = require('bcrypt')
@@ -9,31 +6,21 @@ const JWT = require('jsonwebtoken')
 
 const config = require('../config/auth.config')
 
-/**
- * SIGNUP: crear nuevo usuario
- * POST /apu/auth/signup
- * Body{username,email,password,role}
- * Crea un usuario en la base de datos, 
- * encripta la contraseña antes de guardar con bcrypt
- * genera token JWT 
- * retorna usuario sin mostrar la contraseña 
-*/ 
-   
+
 exports.SIGNUP = async (req,res) => {
     try{
-        // Crear nuevo usuario
+        
         const user= new user({
             username: req.body.username,
             email: req.body.email,
             password:req.body.password,
-            role:req.body.rol || 'auxiliar'// si no se especifica rol por defecto se establece auxiliar
+            role:req.body.rol || 'auxiliar'
         })
 
-        //  guardar usuario en la base de datos 
-        // la contraseña se encripta automaticamente en el middleware del modelo User
+        
         const savedUser = await user.save()
 
-        //  Generar JWT que expira en 24 horas
+        
         const token = JWT.sign({
             id:savedUser._id,
             role:savedUser.role,
@@ -42,7 +29,7 @@ exports.SIGNUP = async (req,res) => {
         config.secret,
         {expiresIn:config.jwtExpiration}
     )
-    //  Preparando respuesta sin mostrar la contraseña
+    
     const UserResponse= {
         id:savedUser._id,
         username:savedUser.username,
@@ -65,19 +52,10 @@ exports.SIGNUP = async (req,res) => {
 }
 
 
-/**
- * SINGIN: iniciar sesion
- * POST: /api/autj/singin
- * body {email username, password}
- * buscar el usuario por email o username
- * valida la contraseña con bcrypt
- * si es correcto el tjwt 
- * Token se usa para autenticar futuras solicitudes
- */
 
 exports.signin = async (req,res) => {
     try{
-        // Validar que se envie el email o username
+       
         if(!req.body.email&& !req.body.username){
             return res.status(400).json({
                 succes:false,
@@ -91,15 +69,14 @@ exports.signin = async (req,res) => {
         })
     }
 
-    //  buscar usuario por email o username
+    
     const user = await User.findOne({
         $or:[
             {username:req.body.username},
             {email:req.body.email}
             
         ]
-    }).select('+password')  //include password para comparar
-         // si no se encuentra el usuario con este email o username
+    }).select('+password') 
          if (!User){
             return res.status(404).json({
                 succes:false,
@@ -107,14 +84,14 @@ exports.signin = async (req,res) => {
             })
          }
 
-        //   verificar que el usuario tenga una contraseña 
+       
         if(!user.password){
             return res.status(400).json({
                 succes:false,
                 message:'Error interno: usuario sin contraseña '
             })
         }
-        // comprar contraseña enviada con el hash almacenado
+        
         const isPasswordValid = await bcrypt.compare(
             req.body.password,user.password
         )
@@ -124,7 +101,7 @@ exports.signin = async (req,res) => {
                 message:'Contraseña incorrecta'
             })
         }
-    // generar jwt 24 horas
+    
     const token =jwtExpiration.sign(
         {
             id:user._id,
@@ -135,7 +112,7 @@ exports.signin = async (req,res) => {
         config.secret,
         {expiresIn:config.jwtExpiration}
     )
-    // preparar respuesta sin mostrar la contraseña 
+    
     const UserResponse={
         id:user._id,
         username:user.name,
