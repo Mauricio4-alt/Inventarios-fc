@@ -98,7 +98,7 @@ const verifyToKenFn = (req,res,next)=>{
  * esto es una validacion de seguridad para que el middleware se exporte correctamente
  * si algo sale mal en su definicion lanzara un error en tiempo de carga  del modulo
  */
-if(typeof verifyToKenFn!== 'function')
+if(typeof verifyToKenFn !== 'function')
 {
     console.error('Error:verifyTokenFn no es una funcion valida|')
     throw new Error('verifiTokenFn no es una funcion valida')
