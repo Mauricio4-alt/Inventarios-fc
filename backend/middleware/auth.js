@@ -28,5 +28,64 @@ exports.authenticate = async (req,res,next )=>{
                 details:'Incluye Authorization Bearer <token>'
             })
         }
-    }catch (err){}
+        // verificar y decodificar el token
+        const decoded = jwt.verify(token,process.env.JQT_SECRET);
+        // Buscar el usuario en la base de datos
+        const user =await User.findById(decoded.id);
+
+        // Si el usuario no existe rechaza la solicitud
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:'Usuario no enconstrado o ha sido eliminado'
+        })
+        // cargar el usuario en el request para usar los siguientes middlewares o controladores
+    }
+        req.user=user;
+        //  LLamar el siguiente middlewware o controlador
+        next();
+
+
+
+    }catch (err){
+        // token invalido o error de verificación
+
+        let message = 'Token inválido o expirado';
+        if (err.name==='TokenExpiredError'){
+            message = 'Token expirado, por favor inicia sesion de nuevo';
+        }else if (err.name ==='jsonwebtokenError'){
+            message='Token invalido o mal formado'
+        }
+
+        return res.status(401).json({
+            success:false,
+            message:err.message
+
+        })
+    }
 }
+
+/**
+ * middleware para autorizar rol
+ * verifica que el usuario tiene uno de los roles requeridos se usa despues de l middleware authenticate
+ * @param {array} roles - array de roles permitido
+ * @return {Function} Middleware function
+ * 
+ * uso:app.delete('api/products/:id',authenticate,authorize(['admin'])) 
+ */
+exports.authorize =(roles)=>{
+    return (req,res,next)=>{
+        // verificar que el usuario autenticado tiene uno de los roles permitidos
+        if(!roles.includes(req.user.role)){
+            return res.status(403).json({
+                success:false,
+                message:'No tienes permiso para realizar para realizar esta accion',
+                requiredRoles:roles,
+                currentRole:req.user.role,
+                details:`Tu rol es "${req.user.role}" pero se requiere uno de: ${roles.join(',')}`
+            })
+        }
+        // si el uusario tiene permiso continuar
+        next();
+    };
+};
