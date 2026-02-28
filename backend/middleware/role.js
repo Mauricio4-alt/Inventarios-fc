@@ -44,5 +44,28 @@ const checkRole = (...allowedRoles)=>{
                 message:'Tolen inválido o expirado'
             })
         }
-    }
+        // verificar si el rol de usuario está en la lista de roles permitidos
+        if(!allowedRoles.includes(req.userRole))
+            {
+                return res.status(403).json({
+                    success:false,
+                    message:`Permisos insuficientes, se requiere: ${allowedRoles.join(' o ')}`
+                })
+            }
+            // usuario tiene permiso continuar 
+            next()
+        }
 }
+
+//  funciones helper para roles especificos
+// verifica q el usuario es admin
+// uso: router.delete('/admin-only',verifiToken,. isAdmin, controller.method);
+
+const isAdmin = (req,res,next) =>{
+    return checkRole('admin')(req,res,next);
+}
+// verificar si el usuario es coordinador
+const isCoordinador = (req,res,next) =>{
+    return checkRole('coordinador')(req,res,next);
+}
+
