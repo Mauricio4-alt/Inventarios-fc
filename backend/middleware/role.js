@@ -68,4 +68,14 @@ const isAdmin = (req,res,next) =>{
 const isCoordinador = (req,res,next) =>{
     return checkRole('coordinador')(req,res,next);
 }
+const isAuxiliar = (req,res,next) =>{
+    return checkRole('auxiliar')(req,res,next);
+}
 
+//  modulos a exportar
+module.exports ={
+    checkRole,
+    isAdmin,
+    isCoordinador,
+    isAuxiliar
+}
