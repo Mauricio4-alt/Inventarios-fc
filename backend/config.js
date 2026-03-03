@@ -16,6 +16,7 @@ module.exports ={
     TOKEN_EXPRIATION:process.env.JWT_EXPIRATION  || '24h',
 
     // configuracion de base de datos
+    DB_URI:process.env.MONGO_URI ||'mongodb:/',
     DB:{
         URL:process.env.MONGO_URI|| 'mongodb://locahos:27017/crud-mongocf',
         OPTION:{
