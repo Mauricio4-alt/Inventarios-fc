@@ -193,6 +193,7 @@ exports.getProductById = async (req, res) => {
 
         res.status(200).json({
             success: true,
+            count:product.length,
             data: product
         });
 
