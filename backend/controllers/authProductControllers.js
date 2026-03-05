@@ -8,7 +8,7 @@
  * Y Hard Delete (Eliminación permanente)
  */
 
-const Subcategory = require('../models/Products');
+const Subcategory = require('../models/Subcategory');
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 
