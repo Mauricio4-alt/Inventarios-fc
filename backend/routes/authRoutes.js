@@ -7,7 +7,7 @@
 const express = require('express');
 const router =express.Router();
 const authController = require('../controllers/authControllers');
-const {verifySingUp} = require('../middleware/');
+const {verifySingUp} = require('../middleware');
 const {verifyToken} =require('../middlewares/authJWT')
 
 

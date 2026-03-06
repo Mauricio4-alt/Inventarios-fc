@@ -10,7 +10,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const morgan =requiere('mongan');
+const morgan =require('morgan');
 const config =require('./config');
 
 
@@ -19,8 +19,8 @@ const config =require('./config');
  * verificar que las variables de entorno requeridas esten definidas 
 */
 
-if(!process.env.MONGO_URI){
-    consolre.error('Error:Mongo_URI no esta definida en .env');
+if(!process.env.MONGODB_URI){
+    console.error('Error:Mongo_URI no esta definida en .env');
     process.exit(1);
 }
 
