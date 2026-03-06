@@ -37,7 +37,7 @@ router.post('',
 )
 router.get('/',verifyToken,productControllers .getProducts)
 
-router.get('/:id',productControllers.getProductByID)
+router.get('/:id',productControllers.getProductById)
 
 router.put('/:id',
     verifyToken,
