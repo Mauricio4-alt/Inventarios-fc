@@ -30,18 +30,18 @@ routes.use((req,res,next)=>{
 
 // rutas de usuario
 routes.post('',
-    verifiToken,
+    verifyToken,
     checkRole(['admin','coordinador']),
     userController.createUser
 )
 
-routes.get('/',verifiToken,
+routes.get('/',verifyToken,
     checkRole(['admin','coordinador']),
     userController.getAllUsers)
 
 routes.get('/:id',
-    vetifyToken,
-    checkRole('admin',coordinador),
+    verifyToken,
+    checkRole(['admin','coordinador']),
     userController.getCategoryById)
 
 routes.put('/id',
