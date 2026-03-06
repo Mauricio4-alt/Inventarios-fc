@@ -56,9 +56,9 @@ active:{
 },)
 
 //  Midleware encripta la contrasela antes de guardar el usuario
-userSchema.eachPath('save',async function(next){
+userSchema.pre('save',async function(next){
     // si el password no ha sido modificado, continuar sin encriptar
-    if(this.isMOdified('password')) return next()
+    if(!this.isMOdified('password')) return next()
     
     try{
         // generar slat con complejidad de 10 rondas

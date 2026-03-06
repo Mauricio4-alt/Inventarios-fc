@@ -106,7 +106,7 @@ const productSchema = new mongoose.Schema({
 */
 productSchema.post('save', function (error,doc,next){
 //     verificar si es error de mongoDB por violacionde indice único
-        if(error==='MongoServeError'&& error.code===11000)
+        if(error.name==='MongoServeError'&& error.code===11000)
         {
             return next(new Error('Ya existe un producto con ese nombre'))
         }
