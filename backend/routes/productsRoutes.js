@@ -35,7 +35,7 @@ router.post('',
     validateSubCategory,
     productControllers .createProduct
 )
-router.get('/',productControllers .getProducts)
+router.get('/',verifyToken,productControllers .getProducts)
 
 router.get('/:id',productControllers.getProductByID)
 
