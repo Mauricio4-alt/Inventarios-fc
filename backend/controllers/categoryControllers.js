@@ -24,8 +24,7 @@ exports.createCategory = async (req, res) => {
         const { name, description } = req.body;
 
         // Validar de los campos de entrada
-        if (!name || !typeof name === 'string' || name.trim()) {
-
+        if (!name || typeof name !== 'string' || !name.trim()) {
             return res.status(400).json({
                 success: false,
                 message: 'El nombre de la categoria es obligatorio y debe ser texto valido'
@@ -98,7 +97,7 @@ exports.getCategories = async (req, res) => {
     const includeInactive = req.query.includeInactive === 'true';
     const activeFilter = includeInactive ? {} : { active : { $ne: false }};
     
-    const categories = await Category.find(activeFilter).scort({ createAt: -1});
+    const categories = await Category.find(activeFilter).sort({ createdAt: -1 });
     res.status(200).json({
         success: true,
         data: categories
@@ -162,7 +161,7 @@ exports.getCategoryById = async (req, res) => {
  * 4- 500: Error en la base de datos
  */
 
-exports.updateCategory = async (reportError, res) => {
+exports.updateCategory = async (req, res) => {
     try {
 
         const { name, description} = req.body;
@@ -176,11 +175,11 @@ exports.updateCategory = async (reportError, res) => {
             // Verificar si el nuevo nombre ya existe en otra categoria
             const existingCategory = await Category.findOne({ name: updateData.name, _id: { $ne: req.params.id}});
 
-            // Asegura que el nuevo nombre mo sea el mismo id
-            if (existing) {
+            // Asegura que el nuevo nombre no exist a en otra categoria
+            if (existingCategory) {
                 return res.status(400).json({
                     success: false,
-                    messsage: 'Ya existe una categoria con ese nombre'
+                    message: 'Ya existe una categoria con ese nombre'
                 });
             }
         }
@@ -201,7 +200,7 @@ exports.updateCategory = async (reportError, res) => {
         }
 
         res.status(200).json({
-            success: false,
+            success: true,
             message: 'Categoria actualizada exitosamente',
             data: updatedCategory
         });
@@ -242,7 +241,7 @@ exports.updateCategory = async (reportError, res) => {
 exports.deleteCategory = async (req, res) => {
     try {
         const Subcategory = require ('../models/Subcategory');
-        const Product = require ('../models/Product');
+        const Product = require ('../models/Products');
         const isHardDelete = req.query.hardDelete === 'true';
 
         // Buscar la categoria a eliminar por su id

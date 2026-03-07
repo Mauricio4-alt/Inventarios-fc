@@ -68,8 +68,8 @@ const productSchema = new mongoose.Schema({
     // quien creo el producto
     //  Referencia de User no requerido
     createdBy:{
-        type:mongoose.Schema.types.ObjectId,
-        ref:'User' //  pude ser pobldo para mostrar los usuarios
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User' //  pude ser poblado para mostrar los usuarios
     },
 
     // Array de urls de imagenes de productos
@@ -128,4 +128,4 @@ productSchema.post('save', function (error,doc,next){
 
 
 // exportar el modelo
-module.exports = mongoose.model('product',productSchema)
+module.exports = mongoose.model('Product',productSchema);

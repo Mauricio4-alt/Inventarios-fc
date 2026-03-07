@@ -10,7 +10,7 @@
 
 const Subcategory = require('../models/Subcategory');
 const Category = require('../models/Category');
-const Product = require('../models/Product');
+const Product = require('../models/Products');
 
 /**
  * CREATE: Crear un nuevo producto

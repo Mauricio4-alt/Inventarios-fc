@@ -1,8 +1,7 @@
 
-const User= require('../models/user') 
-
-const bcrypt = require('bcryptjs')
-const JWT = require('jsonwebtoken')
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const config = require('../config/auth.config')
 
@@ -10,18 +9,18 @@ const config = require('../config/auth.config')
 exports.signup = async (req,res) => {
     try{
         
-        const user= new user({
+        const newUser = new User({
             username: req.body.username,
             email: req.body.email,
-            password:req.body.password,
-            role:req.body.rol || 'auxiliar'
-        })
+            password: req.body.password,
+            role: req.body.role || 'auxiliar'
+        });
 
         
-        const savedUser = await user.save()
+        const savedUser = await newUser.save()
 
         
-        const token = JWT.sign({
+        const token = jwt.sign({
             id:savedUser._id,
             role:savedUser.role,
             email:savedUser.email
@@ -77,11 +76,11 @@ exports.signin = async (req,res) => {
             
         ]
     }).select('+password') 
-         if (!User){
+         if (!user){
             return res.status(404).json({
                 succes:false,
                 message:'Usuario no encontrado'
-            })
+            });
          }
 
        
@@ -102,7 +101,7 @@ exports.signin = async (req,res) => {
             })
         }
     
-    const token =jwtExpiration.sign(
+    const token = jwt.sign(
         {
             id:user._id,
             role:user.role,
@@ -111,11 +110,11 @@ exports.signin = async (req,res) => {
         },
         config.secret,
         {expiresIn:config.jwtExpiration}
-    )
+    );
     
     const UserResponse={
         id:user._id,
-        username:user.name,
+        username:user.username,
         email:user.email,
         role:user.role
     }

@@ -20,7 +20,7 @@
  * 500 error de base de datos
  * 
 */
- const User = requires('../models/user')
+ const User = require('../models/user')
 
 /**
  * verificar que username e email sean único

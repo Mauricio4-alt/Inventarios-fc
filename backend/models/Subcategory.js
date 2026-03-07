@@ -87,4 +87,4 @@ subCategorySchema.post('save', function (error,doc,next){
 
 
 // exportar el modelo
-module.exports = mongoose.model('subCategory',subCategorySchema)
+module.exports = mongoose.model('Subcategory',subCategorySchema);

@@ -8,6 +8,7 @@
 
 const Subcategory = require('../models/Subcategory');
 const Category = require('../models/Category');
+const Product = require('../models/Products');
 
 /**
  * Create: Crear una nueva subcategoria

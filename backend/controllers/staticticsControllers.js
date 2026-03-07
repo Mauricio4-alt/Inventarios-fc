@@ -12,9 +12,9 @@
 const Subcategory = require('../models/Subcategory');
 const User = require('../models/user');
 
-const Product = requiere('../models/Product');
-const Category = requiere('../models/Category');
-const subCategory = requiere('../models/Subcategory');
+const Product = require('../models/Products');
+const Category = require('../models/Category');
+const subCategory = require('../models/Subcategory');
 
 
 /**
@@ -51,4 +51,3 @@ exports.getStatistics = async (req,res) =>{
         
     }
 }
-module.exports = {getStatistics};

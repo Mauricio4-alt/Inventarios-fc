@@ -5,12 +5,12 @@
  */
 
 const authJWT = require('./auth')
-const verifySignUp = requiere('./verifySignUp')
+const verifySignUp = require('./verify')
 
 // Exportar los middlewares agrupados o modulo
 
-module.exports= {
-    authJWT:require('./authJWT'),
-    verifySignUp:requiere('./verfySignUp'),
-    role:require('/role')
-}
+module.exports = {
+    authJWT: require('./authJWT'),
+    verifySignUp: require('./verify'),
+    role: require('./role')
+};

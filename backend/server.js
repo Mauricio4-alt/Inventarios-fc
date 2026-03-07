@@ -20,23 +20,22 @@ const config =require('./config');
 */
 
 if(!process.env.MONGODB_URI){
-    console.error('Error:Mongo_URI no esta definida en .env');
+    console.error('Error: MONGODB_URI no esta definida en .env');
     process.exit(1);
 }
 
 if(!process.env.JWT_SECRET){
-    console.error('Error:JWT_SECRET no esta definida en .env')
-    process.exit(1)
-    
-   
+    console.error('Error: JWT_SECRET no esta definida en .env');
+    process.exit(1);
 }
- // importar todas las rutas 
-    const authRoutes = require('./routes/authRoutes');
-    const userRoutes = require('./routes/userRoutes');
-    const productRoutes = require('./routes/productsRoutes')
-    const CategoryRoutes = require('./routes/categoryRoutes');
-    const subCategoryRoutes = require('./routes/subCategoryRoutes');
-    const statisticsRoutes = require('./routes/statictics.Router');
+
+// importar todas las rutas
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productsRoutes');
+const CategoryRoutes = require('./routes/categoryRoutes');
+const subCategoryRoutes = require('./routes/subCategoryRoutes');
+const statisticsRoutes = require('./routes/statictics.Router');
 
 // iniciar express
 const app = express();
@@ -52,29 +51,34 @@ app.use(cors({
 app.use(morgan('dev'));
 
 // Express JSOn parswa bodies en formato JSON
-app.user(express.json());
+app.use(express.json());
 
 
 //  Express URL  encoded soporta datos form-encoded
 app.use(express.urlencoded({extended:true}))
 
 // conexion a mongodb 
-mongoose.connect(process.env.MONGO_URI).then(()=>console.log('MongoDB conectado correctamente')).catch(err=>{
-    console.error('Error de conexiom a mongoDB',err.messsage)
-})
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB conectado correctamente'))
+  .catch(err => {
+    console.error('Error de conexion a mongoDB', err.message);
+  });
 
 //  Registra Rutas
 
-// Rutas de autenticacion (login,register)
-app.use('api/users',userRoutes);
-// Rutas de usuario crud
-app.use('api/categories',CategoryRoutes);
+// Rutas de autenticacion y usuarios
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
-// Rutas sucategorias CRUD
-app.use('api/categories',subCategoryRoutes);
+// Rutas de categorias & subcategorias
+app.use('/api/categories', CategoryRoutes);
+app.use('/api/subcategories', subCategoryRoutes);
+
+// Rutas de productos
+app.use('/api/products', productRoutes);
 
 // Rutas de estadisticas
-app.use('api/statistic',statisticsRoutes)
+app.use('/api/statistics', statisticsRoutes);
 // manejo de erroes Globales
 app.use((req,res)=>{
     res.status(404).json({
@@ -84,5 +88,5 @@ app.use((req,res)=>{
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=>{
-    console.log(`servidor coorendo en http://localhost:${PORT}`)
+    console.log(`servidor corriendo en http://localhost:${PORT}`)
 })
