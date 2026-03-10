@@ -5,17 +5,24 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config');
 
-const verifyTokenFn = (req, res, next) => {
+const verifyToken = (req, res, next) => {
     try {
         let token = null;
 
-        // Formato Authorization: Bearer <token>
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-            token = req.headers.authorization.split(' ')[1]; // divide en 'Bearer' y el token
-        }
-        // Formato x-access-token
-        else if (req.headers['x-access-token']) {
-            token = req.headers['x-access-token'];
+        // Obtener token desde headers
+        const authHeader = req.headers['authorization'];
+        const accessToken = req.headers['x-access-token'];
+
+        if (authHeader) {
+            // Puede venir como "Bearer token"
+            if (authHeader.startsWith('Bearer ')) {
+                token = authHeader.slice(7); // quita "Bearer "
+            } else {
+                token = authHeader;
+            }
+        } 
+        else if (accessToken) {
+            token = accessToken;
         }
 
         // Si no hay token
@@ -35,6 +42,7 @@ const verifyTokenFn = (req, res, next) => {
         req.userEmail = decoded.email;
 
         next();
+
     } catch (err) {
         return res.status(401).json({
             success: false,
@@ -44,12 +52,6 @@ const verifyTokenFn = (req, res, next) => {
     }
 };
 
-// Validación de si verifyTokenFn es una función
-if (typeof verifyTokenFn !== 'function') {
-    console.error('[AuthJWT Error: verifyTokenFn no es una función]');
-    throw new Error('verifyTokenFn debe ser una función');
-}
-
 module.exports = {
-    verifyToken: verifyTokenFn
+    verifyToken
 };
