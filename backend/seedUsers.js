@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 
 // Modelo User → se usa para verificar existencia y crear nuevos usuarios
 // Archivo: backend/models/User.js
-const User = require('./models/User');
+const User = require('./models/user');
 
 // dbConfig → contiene la URL de conexión a MongoDB
 // Archivo: backend/config/db.js

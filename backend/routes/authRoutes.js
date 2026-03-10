@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const authController = require('../controllers/authControllers');
+const authControllers = require('../controllers/authControllers');
 
 const {
   checkDuplicateUsernameOrEmail,
@@ -11,13 +11,14 @@ const {
 const { verifyToken } = require('../middleware/authJWT');
 const { checkRole } = require('../middleware/role');
 
+router.post('/sigin',authControllers.signin);
 
 router.post('/signup',
     verifyToken,
     checkRole('admin'),
     checkDuplicateUsernameOrEmail,
     checkRolesExisted,
-    authController.signup
+    authControllers.signup
 );
 
 module.exports = router;

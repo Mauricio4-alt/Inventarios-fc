@@ -59,7 +59,7 @@ async function runTests() { // Función principal que ejecuta todos los tests en
   // Login - Admin
   let res = await request('POST', '/auth/signin', { // Envía petición de login con credenciales de admin
     username: 'admin',      // Usuario admin creado con seedUsers.js
-    password: 'admin123'    // Contraseña del admin
+    password: 'admin123456'    // Contraseña del admin
   });
   log('Login admin', res.ok && res.status === 200, `(Status: ${res.status})`); // Verifica que el login respondió 200 OK
   if (res.ok) { // Si el login fue exitoso
