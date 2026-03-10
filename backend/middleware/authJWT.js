@@ -7,25 +7,14 @@ const config = require('../config/auth.config');
 
 const verifyToken = (req, res, next) => {
     try {
-        let token = null;
 
-        // Obtener token desde headers
-        const authHeader = req.headers['authorization'];
-        const accessToken = req.headers['x-access-token'];
+        // 👇 AGREGAR AQUÍ
+        console.log("HEADERS:", req.headers);
 
-        if (authHeader) {
-            // Puede venir como "Bearer token"
-            if (authHeader.startsWith('Bearer ')) {
-                token = authHeader.slice(7); // quita "Bearer "
-            } else {
-                token = authHeader;
-            }
-        } 
-        else if (accessToken) {
-            token = accessToken;
-        }
+        let token =
+            req.headers['x-access-token'] ||
+            req.headers['authorization'];
 
-        // Si no hay token
         if (!token) {
             return res.status(403).json({
                 success: false,
@@ -33,10 +22,12 @@ const verifyToken = (req, res, next) => {
             });
         }
 
-        // Verificar token
-        const decoded = jwt.verify(token, config.secret);
+        if (token.startsWith('Bearer ')) {
+            token = token.split(' ')[1];
+        }
 
-        // Adjuntar datos al request
+        const decoded = jwt.verify(token, config.secret);
+        console.log("DECODED:", decoded);
         req.userId = decoded.id;
         req.userRole = decoded.role;
         req.userEmail = decoded.email;
@@ -51,7 +42,6 @@ const verifyToken = (req, res, next) => {
         });
     }
 };
-
 module.exports = {
     verifyToken
 };
