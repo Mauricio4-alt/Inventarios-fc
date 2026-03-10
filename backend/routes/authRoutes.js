@@ -1,30 +1,24 @@
-/**
- * Rutas de autenticacion
- * define los endpoitns relativos a autenticacion de usuariis
- * post /api/auth/signin registrat un nuevo usuario
- */
-
 const express = require('express');
-const router =express.Router();
-const authController = require('../controllers/authControllers');
-const {verifySingUp} = require('../middleware');
-const {verifyToken} =require('../middlewares/authJWT')
+const router = express.Router();
 
+const authControllers = require('../controllers/authControllers');
 
-const {checkRole} = require('../middlewares/role');
+const {
+  checkDuplicateUsernameOrEmail,
+  checkRolesExisted
+} = require('../middleware/verify');
 
-// Rutas de autenticación
+const { verifyToken } = require('../middleware/authJWT');
+const { checkRole } = require('../middleware/role');
 
-// requiere email-usuario y password
-router.post('/sigin',authController.signin);
-router.post('Signup', 
+router.post('/sigin',authControllers.signin);
+
+router.post('/signup',
     verifyToken,
     checkRole('admin'),
-    verifySingUp.checkDuplicateUsernameOrEmail,
-    verifySingUp.checkRolesExisted,
-    authController.SIGNUP
+    checkDuplicateUsernameOrEmail,
+    checkRolesExisted,
+    authControllers.signup
+);
 
-)
-
-
-module.exports =router;
+module.exports = router;

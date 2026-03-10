@@ -51,14 +51,14 @@ active:{
 
 
 }, {
-    timestampps:true, // agrega campos createdAt y updatedAt automaticamente
+    timestamps:true, // agrega campos createdAt y updatedAt automaticamente
     versionKey:false // elimina el campo __v que mongoose agrega por defecto para el control de versiones de mongoose
-},)
+});
 
 //  Midleware encripta la contrasela antes de guardar el usuario
 userSchema.pre('save',async function(next){
     // si el password no ha sido modificado, continuar sin encriptar
-    if(!this.isMOdified('password')) return next()
+    if(!this.isModified('password')) return next();
     
     try{
         // generar slat con complejidad de 10 rondas

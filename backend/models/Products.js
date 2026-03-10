@@ -1,131 +1,101 @@
 /*
-* Modelo de producto MONGODB
-* Define la estructura de la subcategoria
-* el producto depende de una categoria
-* muchos productos pueden pertenecer a una subcategoria
-* tiene relacion un user para ver quien creo el producto
-* Soporte de imagenes(array de url)
-* validacion de valores numericos (no negaticos)
+* Modelo de producto - MongoDB
+* Define la estructura de los productos dentro de la base de datos.
+* Un producto pertenece a:
+*   - una categoría
+*   - una subcategoría
+* También guarda:
+*   - usuario que lo creó
+*   - imágenes
+*   - estado activo
 */
-
-
-
 
 const mongoose = require('mongoose')
 
-// Campos de la tabla subcategoria 
-
-
+// Definición del esquema del producto
 const productSchema = new mongoose.Schema({
-    // Nombre del producto  unico requerido
+
+    // Nombre del producto
+    // Debe ser único en la base de datos
     name:{ 
         type:String,
-        required:[true,'El nombre es obligatios'],
-        unique:true, // no pueden haber dos productos con el mismo nombre
-        trim:true // Eliminar espacios al inicio y al final
+        required:[true,'El nombre es obligatorio'],
+        unique:true, // evita productos duplicados
+        trim:true // elimina espacios al inicio y final
     },
-    //  cantidad del stock
-    //  el estock no puede ser negativo
+
+    // Cantidad disponible en inventario
     stock:{
         type:Number,
-        required:[true,'el stock es obligatorio'],
-        min:[0,'el stock no puede ser negativo']
+        required:[true,'El stock es obligatorio'],
+        min:[0,'El stock no puede ser negativo'] // validación
     },
 
-
-    // precio en unidades monetarias
-    // no pueder ser negativo
+    // Precio del producto
     price:{
         type:Number,
-        required:[true,'el precio es obligatorio'],
+        required:[true,'El precio es obligatorio'],
         min:[0,'El precio no puede ser negativo']
-
     },
 
-
-    description:{ // descripcion de producto -requerido
+    // Descripción del producto
+    description:{
         type:String,
-        required:[true,'la descripcion es requerida'],
-        trim:true,
+        required:[true,'La descripcion es requerida'],
+        trim:true
     },
-    // Categoria padre esta subcategoria perenece a una categoria 
-    // relacion 1-muchos una categoria puede tener muchas subcategorias
-    //  un producto pertenece a una subcategoria pero una subcategoria puede tener muchos productos 
-    //  relacion 1 a m
 
-
+    // Categoría principal del producto
     category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Category', // puede ser poblado con .populate ('Category)
+        ref:'Category', // relación con el modelo Category
         required:[true,'La categoria es requerida']
     },
-    subCategory:{
+
+    // Subcategoría a la que pertenece
+    subcategory:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'subCategory', // puede ser poblado con .populate ('subCategory)
+        ref:'Subcategory', // modelo Subcategory
         required:[true,'La subCategoria es requerida']
     },
-    
-    // quien creo el producto
-    //  Referencia de User no requerido
+
+    // Usuario que creó el producto
     createdBy:{
-        type:mongoose.Schema.types.ObjectId,
-        ref:'User' //  pude ser pobldo para mostrar los usuarios
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
     },
 
-    // Array de urls de imagenes de productos
+    // Arreglo de imágenes del producto
     images:[{
-        type:String, // url de la imagen
-
+        type:String // URL de la imagen
     }],
 
-    // active desactiva el producto pero no lo elimina 
+    // Permite activar o desactivar el producto
     active:{
         type:Boolean,
-        default:true,
+        default:true
     }
-       
-
 
 },{
-    timestamps:true, // agrega createdAt y updatedAt automaticamente
-    versionKey:false, // no incluir campos __v
+    timestamps:true, // agrega createdAt y updatedAt
+    versionKey:false // elimina el campo __v
 })
 
 /*
-* ;MIDLEWARE PRE-SAVE
-* limpia indices duplicados
-* Mongodb a veces crea multiples indices con el mismo nombre
-* Esto causa conflicto al intentar dropIndex o recrear indices
-* este middleware limpia los indices problemáticos
-* proceso
-* 1 obtiene una lista de todos los indices de la colección
-* 2 busca si existe indice con nombre name_1 (actiguo o duplicado)
-* si existe lo elimina antes de nuevas operaciones 
-* ignora errores si el indice no existe 
-* continua con el guardado normal
+* Middleware post-save
+* Captura errores de duplicados en índices únicos
+* Mongo devuelve error 11000 cuando se viola unique
 */
 productSchema.post('save', function (error,doc,next){
-//     verificar si es error de mongoDB por violacionde indice único
-        if(error.name==='MongoServeError'&& error.code===11000)
-        {
-            return next(new Error('Ya existe un producto con ese nombre'))
-        }
-        //  pasar el erorr como es 
-        next(error)
 
-        } )
-    
-    
+    if(error.name === 'MongoServerError' && error.code === 11000){
+        return next(new Error('Ya existe un producto con ese nombre'))
+    }
+
+    next(error)
+
+})
 
 
-/*
-* crear indice unico
-*
-*Mongo rechazara cualquier intento de insertar o actualizar un docuumento con un valor de name que ya exista
-* aumenta la velocidad de las busquedas
-*/
-
-
-
-// exportar el modelo
-module.exports = mongoose.model('product',productSchema)
+// Exporta el modelo
+module.exports = mongoose.model('Product',productSchema)

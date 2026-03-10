@@ -1,8 +1,7 @@
 
-const User= require('../models/user') 
-
-const bcrypt = require('bcryptjs')
-const JWT = require('jsonwebtoken')
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('../middleware/authJWT');
 
 const config = require('../config/auth.config')
 
@@ -10,18 +9,18 @@ const config = require('../config/auth.config')
 exports.signup = async (req,res) => {
     try{
         
-        const user= new user({
+        const newUser = new User({
             username: req.body.username,
             email: req.body.email,
-            password:req.body.password,
-            role:req.body.rol || 'auxiliar'
-        })
+            password: req.body.password,
+            role: req.body.role || 'auxiliar'
+        });
 
         
-        const savedUser = await user.save()
+        const savedUser = await newUser.save()
 
         
-        const token = JWT.sign({
+        const token = jwt.signin({
             id:savedUser._id,
             role:savedUser.role,
             email:savedUser.email
@@ -44,7 +43,7 @@ exports.signup = async (req,res) => {
     })
     }catch (err){
         res.status(500).json({
-            succes:false,
+            success:false,
             message:'Error al registrar un usuario',
             error:err.message
         })
@@ -58,13 +57,13 @@ exports.signin = async (req,res) => {
        
         if(!req.body.email&& !req.body.username){
             return res.status(400).json({
-                succes:false,
+                success:false,
                 message:'email o username requerido'
             })
         }
     if (!req.body.password){
         return res.status(400).json({
-            succes:false,
+            successfalse,
             message:'password requerido'
         })
     }
@@ -77,17 +76,17 @@ exports.signin = async (req,res) => {
             
         ]
     }).select('+password') 
-         if (!User){
+         if (!user){
             return res.status(404).json({
-                succes:false,
+                successfalse,
                 message:'Usuario no encontrado'
-            })
+            });
          }
 
        
         if(!user.password){
             return res.status(400).json({
-                succes:false,
+                success:false,
                 message:'Error interno: usuario sin contraseña '
             })
         }
@@ -97,12 +96,12 @@ exports.signin = async (req,res) => {
         )
         if (!isPasswordValid){
             return res.status(401).json({
-                succes:false,
+                success:false,
                 message:'Contraseña incorrecta'
             })
         }
     
-    const token =jwtExpiration.sign(
+    const token = jwt.sigin(
         {
             id:user._id,
             role:user.role,
@@ -111,23 +110,23 @@ exports.signin = async (req,res) => {
         },
         config.secret,
         {expiresIn:config.jwtExpiration}
-    )
+    );
     
     const UserResponse={
         id:user._id,
-        username:user.name,
+        username:user.username,
         email:user.email,
         role:user.role
     }
     res.status(200).json({
-        succes:true,
+        success:true,
         message:'inicio de sesion con exito',
         token:token,
         user:UserResponse
     })
 }catch(err){
     return res.status(500).json({
-        succes:false,
+        success:false,
         message:'Error al iniciar sesion',
         error:err.message
     })
