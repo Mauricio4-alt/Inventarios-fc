@@ -11,7 +11,7 @@ const {
 const { verifyToken } = require('../middleware/authJWT');
 const { checkRole } = require('../middleware/role');
 
-router.post('/sigin',authControllers.signin);
+router.post('/signin',authControllers.signin);
 
 router.post('/signup',
     verifyToken,
