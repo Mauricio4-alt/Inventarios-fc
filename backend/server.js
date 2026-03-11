@@ -33,10 +33,9 @@ if(!process.env.JWT_SECRET){
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productsRoutes');
-const CategoryRoutes = require('./routes/categoryRoutes');
-const subCategoryRoutes = require('./routes/subCategoryRoutes');
-const statisticsRoutes = require('./routes/statictics.Router');
-
+const categoryRoutes = require('./routes/categoryRoutes');
+const subcategoryRoutes = require('./routes/subcategoryRoutes');
+const statisticsRoutes = require('./routes/statisticsRoutes');
 // iniciar express
 const app = express();
 
@@ -71,8 +70,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
 // Rutas de categorias & subcategorias
-app.use('/api/categories', CategoryRoutes);
-app.use('/api/subcategories', subCategoryRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/subcategories', subcategoryRoutes);
 
 // Rutas de productos
 app.use('/api/products', productRoutes);
