@@ -16,39 +16,34 @@ routes.use((req,res,next)=>{
     next();
 })
 
-// Crear usuario
 routes.post('/',
     verifyToken,
     checkRole('admin','coordinador'),
     userController.createUser
 )
 
-// Listar usuarios
 routes.get('/',
     verifyToken,
     checkRole('admin','coordinador'),
     userController.getAllUsers
 )
 
-// Obtener usuario por id
 routes.get('/:id',
     verifyToken,
     checkRole('admin','coordinador'),
     userController.getUserById
 )
 
-// Actualizar usuario
 routes.put('/:id',
     verifyToken,
     checkRole('admin','coordinador'),
     userController.updateUser
 )
 
-// Eliminar usuario
 routes.delete('/:id',
     verifyToken,
     checkRole('admin'),
     userController.deleteUser
 )
 
-module.exports = routes;
+module.exports = routes

@@ -12,6 +12,6 @@ module.exports= {
     //  tiempo de expiracion del token de refresco en segundos
     jwtRefresh:6048000, // 7 dias
     // numero de rondas para encriptarc contraseñas
-    saltRounds: process.env.SALT_ROUNDS || 8
+    slatRounds: process.env.SALT_ROUNDS || 8
 
 }

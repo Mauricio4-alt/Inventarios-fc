@@ -59,14 +59,9 @@ exports.createUser = async (req, res) => {
     const newUser = new User({ username, email, password, role });
     const saved = await newUser.save();
     res.status(201).json({ success: true, data: { id: saved._id, username: saved.username, email: saved.email, role: saved.role } });
-  } catch (error) {
-    console.error("ERROR CREATE USER:", error);
-
-    return res.status(500).json({
-        success:false,
-        message:'Error al crear usuario',
-        error:error.message
-    });
+  } catch (err) {
+    console.error('[userControllers] createUser error', err);
+    res.status(500).json({ success: false, message: 'Error al crear usuario' });
   }
 };
 

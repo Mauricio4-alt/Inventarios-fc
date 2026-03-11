@@ -27,18 +27,18 @@ exports.createProduct = async (req, res) => {
     try {
 
         // Extraer datos del body
-        const { name, description, price, stock, category, subCategory } = req.body;
+        const { name, description, price, stock, category, subcategory } = req.body;
 
         /**
          * ===== VALIDACIÓN DE CAMPOS =====
          */
 
-        if (!name || !description || !price || !stock || !category || !subCategory) {
+        if (!name || !description || !price || !stock || !category || !subcategory) {
 
             return res.status(400).json({
                 success: false,
                 message: 'Todos los campos son obligatorios',
-                requiredFields: ['name','description','price','stock','category','subCategory']
+                requiredFields: ['name','description','price','stock','category','subcategory']
             });
         }
 
@@ -63,7 +63,7 @@ exports.createProduct = async (req, res) => {
          */
 
         const subcategoryExists = await Subcategory.findOne({
-            _id: subCategory,
+            _id: subcategory,
             category: category
         });
 
@@ -85,7 +85,7 @@ exports.createProduct = async (req, res) => {
             price,
             stock,
             category,
-            subCategory
+            subcategory
         });
 
 
@@ -111,7 +111,7 @@ exports.createProduct = async (req, res) => {
 
         const productWithDetails = await Product.findById(savedProduct._id)
             .populate('category','name')
-            .populate('subCategory','name')
+            .populate('subcategory','name')
             .populate('createdBy','username email');
 
 
@@ -172,7 +172,7 @@ exports.getProducts = async (req,res) => {
 
         const products = await Product.find(filter)
             .populate('category','name')
-            .populate('subCategory','name')
+            .populate('subcategory','name')
             .sort({ createdAt:-1 });
 
 
@@ -224,7 +224,7 @@ exports.getProductById = async (req,res) => {
 
         const product = await Product.findById(req.params.id)
             .populate('category','name description')
-            .populate('subCategory','name description');
+            .populate('subcategory','name description');
 
 
         if(!product){
@@ -281,7 +281,7 @@ exports.updateProduct = async (req,res) => {
 
     try{
 
-        const { name, description, price, stock, category, subCategory } = req.body;
+        const { name, description, price, stock, category, subcategory } = req.body;
 
         const updateData = {};
 
@@ -295,7 +295,7 @@ exports.updateProduct = async (req,res) => {
         if(price) updateData.price = price;
         if(stock) updateData.stock = stock;
         if(category) updateData.category = category;
-        if(subCategory) updateData.subCategory = subCategory;
+        if(subcategory) updateData.subcategory = subcategory;
 
 
         /**
@@ -319,11 +319,11 @@ exports.updateProduct = async (req,res) => {
         }
 
 
-        if(subCategory){
+        if(subcategory){
 
             const subcategoryExists = await Subcategory.findOne({
 
-                _id:subCategory,
+                _id:subcategory,
                 category:category || updateData.category
 
             });
@@ -353,7 +353,7 @@ exports.updateProduct = async (req,res) => {
 
         )
         .populate('category','name')
-        .populate('subCategory','name')
+        .populate('subcategory','name')
         .populate('createdBy','username email');
 
 

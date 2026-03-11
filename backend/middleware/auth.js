@@ -4,9 +4,9 @@
  * carofoca que el usuario tenga un token valido y carga los datps del usuario e req.user
  */
 
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
-const User = require('../models/user')
+const User = require('./models/user');
 
 /**
  * Autenticar usuario 
@@ -18,7 +18,7 @@ const User = require('../models/user')
 exports.authenticate = async (req,res,next )=>{
     try{
         // Extraer el token del header Bearer <token>
-        const token = req.header('Authorizaion').replacer('Bearer ','');
+        const token = req.header('Authorization').replacer('Bearer ','');
 
         //  si no hay un token rechaza la solicitud
         if(!token){
@@ -26,10 +26,10 @@ exports.authenticate = async (req,res,next )=>{
                 success:false,
                 message:'Token de autenticacion requerido',
                 details:'Incluye Authorization Bearer <token>'
-            })
+            });
         }
         // verificar y decodificar el token
-        const decoded = jwt.verify(token,process.env.JQT_SECRET);
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
         // Buscar el usuario en la base de datos
         const user =await User.findById(decoded.id);
 
@@ -38,14 +38,13 @@ exports.authenticate = async (req,res,next )=>{
             return res.status(404).json({
                 success:false,
                 message:'Usuario no enconstrado o ha sido eliminado'
-        })
+        });
         // cargar el usuario en el request para usar los siguientes middlewares o controladores
     }
         req.user=user;
+        req.userRole = user.role;
         //  LLamar el siguiente middlewware o controlador
         next();
-
-
 
     }catch (err){
         // token invalido o error de verificación
@@ -61,7 +60,7 @@ exports.authenticate = async (req,res,next )=>{
             success:false,
             message:err.message
 
-        })
+        });
     }
 }
 

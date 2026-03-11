@@ -20,7 +20,7 @@
  * 500 error de base de datos
  * 
 */
- const User = require('../models/user')
+ const User = require('../models/user');
 
 /**
  * verificar que username e email sean único
@@ -63,7 +63,7 @@ const checkDuplicateUsernameOrEmail = async (req,res,next) =>
             if(user)
             {
                 return res.status(400).json({
-                    succes:false,
+                    success:false,
                     message:'Username o email ya existe '
                 })
             }
@@ -107,9 +107,9 @@ const checkDuplicateUsernameOrEmail = async (req,res,next) =>
     if(req.body.role)
     {
         // convertir a array si es string (soporta ambos formatos)
-        const roles = Array.isArray(req.body.role ? req.body.role:[req.body.role])
+        const roles = Array.isArray(req.body.role) ? req.body.role : [req.body.role];
         // filtrar roles que no están en la lista valida
-        const invalidRoles= roles.filter(role=>!validRoles.includes(role))
+        const invalidRoles= roles.filter(role=>!validRoles.includes(role));
         //  si hay roles inválidos rechazar
         if (invalidRoles.length>0)
             {

@@ -56,7 +56,7 @@ const productSchema = new mongoose.Schema({
     subcategory:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Subcategory', // modelo Subcategory
-        required:[true,'La subCategoria es requerida']
+        required:[true,'La subcategoria es requerida']
     },
 
     // Usuario que creó el producto

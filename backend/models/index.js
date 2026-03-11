@@ -18,4 +18,4 @@ module.exports = {
     Product,
     Category,
     Subcategory
-}
+};

@@ -13,7 +13,7 @@ const mongoose = require('mongoose')
 // Campos de la tabla subcategoria 
 
 
-const subCategorySchema = new mongoose.Schema({
+const subcategorySchema = new mongoose.Schema({
     // Nombre de la subcategoria unico requerido
     name:{ 
         type:String,
@@ -61,7 +61,7 @@ const subCategorySchema = new mongoose.Schema({
 * ignora errores si el indice no existe 
 * continua con el guardado normal
 */
-subCategorySchema.post('save', function (error,doc,next){
+subcategorySchema.post('save', function (error,doc,next){
 //     verificar si es error de mongoDB por violacionde indice único
         if(error==='MongoServeError'&& error.code===1000)
             {
@@ -87,4 +87,4 @@ subCategorySchema.post('save', function (error,doc,next){
 
 
 // exportar el modelo
-module.exports = mongoose.model('Subcategory',subCategorySchema);
+module.exports = mongoose.model('Subcategory',subcategorySchema);
