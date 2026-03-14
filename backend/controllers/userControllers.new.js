@@ -66,25 +66,52 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  try {
-    if (req.userRole === 'auxiliar' && req.userId !== req.params.id) {
-      return res.status(403).json({ success: false, message: 'Sin permiso para actualizar' });
-    }
-    if (req.userRole === 'auxiliar' && req.body.role) {
-      return res.status(403).json({ success: false, message: 'Auxiliar no puede cambiar rol' });
-    }
+    try {
 
-    const updated = await User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true }).select('-password');
-    if (!updated) {
-      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        //restriccion: auxiliar solo puede actualizar su propio perfil 
+        if (req.userRole === 'auxiliar' && req.userId.toString() !== req.params.id) {
+            return res.status(403).json({
+                success: false,
+                message: 'no tienes permisos para actualizar este usuario'
+            });
+        }
+
+        //restriccion auxiliar no puede cambiar su rol
+        if (req.userRole === 'auxiliar' && req.body.role) {
+            return res.status(403).json({
+                success: false,
+                message: 'no puedes cambiar tu rol'
+            });
+        }
+
+        //actualizar usuario
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true } //retorna documento actualizado
+        ).select('-password'); //no retorna contraseña
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Usuario actualizado',
+            data: updatedUser
+        });
+    } catch (error) {
+        console.error('Error en updateUser:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar usuario',
+            error: error.message
+        });
     }
-    res.status(200).json({ success: true, data: updated });
-  } catch (err) {
-    console.error('[userControllers] updateUser error', err);
-    res.status(500).json({ success: false, message: 'Error al actualizar usuario' });
-  }
 };
-
 exports.deleteUser = async (req, res) => {
   try {
     const isHard = req.query.hardDelete === 'true';
