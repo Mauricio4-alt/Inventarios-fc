@@ -31,7 +31,7 @@ email:{ // email debeia ser único y obligatorio
 password:{
     type:String,
     required:true,
-    minLength:10,
+    minLength:6,
     select:false // no incluir la contraseña en las consultas por defecto
 
 },
