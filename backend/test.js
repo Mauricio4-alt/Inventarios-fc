@@ -71,7 +71,7 @@ async function runTests() {
   // Login - Admin
   let res = await request("POST", "/auth/signin", {
     // Envía petición de login con credenciales de admin
-    //username: 'admin',      // Usuario admin creado con seedUsers.js
+    username: 'admin',      // Usuario admin creado con seedUsers.js
     email: "admin@example.com",
     password: "admin123456", // Contraseña del admin
   });
